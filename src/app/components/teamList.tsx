@@ -9,10 +9,16 @@ interface Team {
 interface TeamListProps {
   teams: Team[];
   onDelete: (id: number) => void;
+  onSelect: (id: number) => void;
   onCreate: () => void;
 }
 
-const TeamList: React.FC<TeamListProps> = ({ teams, onDelete, onCreate }) => {
+const TeamList: React.FC<TeamListProps> = ({
+  teams,
+  onDelete,
+  onCreate,
+  onSelect,
+}) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [hoveredTeamId, setHoveredTeamId] = useState<number | null>(null);
 
@@ -26,7 +32,7 @@ const TeamList: React.FC<TeamListProps> = ({ teams, onDelete, onCreate }) => {
         className='text-md font-bold flex justify-between items-center cursor-pointer'
         onClick={toggleDropdown}
       >
-        <span>My Teams</span>
+        <span className='text-md'>My Teams</span>
         <span
           className={`transform transition-transform ${
             isDropdownOpen ? 'rotate-180' : ''
@@ -53,6 +59,7 @@ const TeamList: React.FC<TeamListProps> = ({ teams, onDelete, onCreate }) => {
           {teams.map((team) => (
             <div
               key={team.id}
+              onClick={() => onSelect(team.id)}
               className='flex items-center justify-between cursor-pointer p-2 rounded-md hover:bg-gray-100'
               onMouseEnter={() => setHoveredTeamId(team.id)}
               onMouseLeave={() => setHoveredTeamId(null)}
@@ -64,7 +71,10 @@ const TeamList: React.FC<TeamListProps> = ({ teams, onDelete, onCreate }) => {
               {hoveredTeamId === team.id && (
                 <button
                   className='text-red-500 hover:text-red-700'
-                  onClick={() => onDelete(team.id)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onDelete(team.id);
+                  }}
                 >
                   <svg
                     width='20'

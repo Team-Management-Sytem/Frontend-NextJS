@@ -24,6 +24,25 @@ export async function fetchTeam(id: number) {
   return response.json();
 }
 
+export async function updateTeam(
+  id: number,
+  data: { name?: string; description?: string }
+) {
+  const response = await fetch(`${BASE_URL}/api/teams/${id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to update team');
+  }
+
+  return response.json();
+}
+
 export async function deleteTeam(id: number) {
   if (!id) {
     throw new Error('Team ID is required to delete a team');
