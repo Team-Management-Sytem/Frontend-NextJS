@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
@@ -114,8 +115,13 @@ export default function HomePage() {
       {/* Sidebar */}
       <aside className='w-1/5 bg-gray-50 p-6 border-r'>
         <div className='flex items-center mb-10'>
-          <div className='w-12 h-12 bg-gray-300 rounded-full'></div>
-          <span className='ml-4 text-xl font-semibold'>Username</span>
+          <Link
+            href='/profileSettings'
+            className='flex items-center mb-10 cursor-pointer'
+          >
+            <div className='w-12 h-12 bg-gray-300 rounded-full'></div>
+            <span className='ml-4 text-xl font-semibold'>Username</span>
+          </Link>
         </div>
         {loadingTeams ? (
           <p>Loading teams...</p>

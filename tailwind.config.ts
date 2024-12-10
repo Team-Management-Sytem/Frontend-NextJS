@@ -3,7 +3,11 @@ import defaultTheme from 'tailwindcss/defaultTheme';
 
 export default {
   darkMode: ['class'],
-  content: ['./src/**/*.{js,jsx,ts,tsx}'],
+  content: [
+    './src/**/*.{js,jsx,ts,tsx}', // Semua file di dalam src
+    './src/pages/**/*.{js,jsx,ts,tsx}', // Tambahkan ini untuk pages eksplisit
+    './src/components/**/*.{js,jsx,ts,tsx}', // Pastikan komponen juga terdeteksi
+  ],
   theme: {
     extend: {
       fontFamily: {
