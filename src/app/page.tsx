@@ -1,70 +1,120 @@
 'use client';
 
-import Head from 'next/head';
-import * as React from 'react';
-import '@/lib/env';
+import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
 
-import ArrowLink from '@/components/links/ArrowLink';
-import ButtonLink from '@/components/links/ButtonLink';
-import UnderlineLink from '@/components/links/UnderlineLink';
-import UnstyledLink from '@/components/links/UnstyledLink';
+import { deleteTeam, fetchTeams } from '@/lib/api';
 
-/**
- * SVGR Support
- * Caveat: No React Props Type.
- *
- * You can override the next-env if the type is important to you
- * @see https://stackoverflow.com/questions/68103844/how-to-override-next-js-svg-module-declaration
- */
+import {
+  Card,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 
-// !STARTERCONF -> Select !STARTERCONF and CMD + SHIFT + F
-// Before you begin editing, follow all comments with `STARTERCONF`,
-// to customize the default configuration.
+import TeamList from '@/app/components/teamList';
+
+interface Team {
+  id: number;
+  name: string;
+  description: string;
+}
 
 export default function HomePage() {
+  const [teams, setTeams] = useState<Team[]>([]);
+  const [loadingTeams, setLoadingTeams] = useState(true);
+  const router = useRouter();
+
+  useEffect(() => {
+    async function getTeams() {
+      try {
+        const response = await fetchTeams();
+        setTeams(response.data);
+      } catch (error) {
+        alert('Error fetching data');
+      } finally {
+        setLoadingTeams(false);
+      }
+    }
+    getTeams();
+  }, []);
+
+  const handleDeleteTeam = async (id: number) => {
+    try {
+      await deleteTeam(id);
+      setTeams((prevTeams) => prevTeams.filter((team) => team.id !== id));
+    } catch (error) {
+      alert('Error fetching data');
+    }
+  };
+
+  const dummyCards = [
+    {
+      title: 'Card Title 1',
+      description: 'Card Description 1',
+      footer: 'Card Footer 1',
+    },
+    {
+      title: 'Card Title 2',
+      description: 'Card Description 2',
+      footer: 'Card Footer 2',
+    },
+    {
+      title: 'Card Title 3',
+      description: 'Card Description 3',
+      footer: 'Card Footer 3',
+    },
+    {
+      title: 'Card Title 4',
+      description: 'Card Description 4',
+      footer: 'Card Footer 4',
+    },
+  ];
+
   return (
-    <main>
-      <Head>
-        <title>Hi</title>
-      </Head>
-      <section className='bg-white'>
-        <div className='layout relative flex min-h-screen flex-col items-center justify-center py-12 text-center'>
-          <h1 className='mt-4'>Next.js + Tailwind CSS + TypeScript Starter</h1>
-          <p className='mt-2 text-sm text-gray-800'>
-            A starter for Next.js, Tailwind CSS, and TypeScript with Absolute
-            Import, Seo, Link component, pre-configured with Husky{' '}
-          </p>
-          <p className='mt-2 text-sm text-gray-700'>
-            <ArrowLink href='https://github.com/theodorusclarence/ts-nextjs-tailwind-starter'>
-              See the repository
-            </ArrowLink>
-          </p>
-
-          <ButtonLink className='mt-6' href='/components' variant='light'>
-            See all components
-          </ButtonLink>
-
-          <UnstyledLink
-            href='https://vercel.com/new/git/external?repository-url=https%3A%2F%2Fgithub.com%2Ftheodorusclarence%2Fts-nextjs-tailwind-starter'
-            className='mt-4'
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              width='92'
-              height='32'
-              src='https://vercel.com/button'
-              alt='Deploy with Vercel'
-            />
-          </UnstyledLink>
-
-          <footer className='absolute bottom-2 text-gray-700'>
-            © {new Date().getFullYear()} By{' '}
-            <UnderlineLink href='https://theodorusclarence.com?ref=tsnextstarter'>
-              Theodorus Clarence
-            </UnderlineLink>
-          </footer>
+    <div className='flex h-screen'>
+      {/* Sidebar */}
+      <aside className='w-1/5 bg-gray-50 p-6 border-r'>
+        <div className='flex items-center mb-10'>
+          <div className='w-12 h-12 bg-gray-300 rounded-full'></div>
+          <span className='ml-4 text-xl font-semibold'>Username</span>
         </div>
-      </section>
-    </main>
+        {loadingTeams ? (
+          <p>Loading teams...</p>
+        ) : (
+          <TeamList
+            teams={teams}
+            onDelete={handleDeleteTeam}
+            onCreate={() => router.push('/addTeam')}
+          />
+        )}
+        <button className='mt-6 text-red-500 flex items-center'>
+          <span className='text-md font-bold'>Logout</span>
+        </button>
+      </aside>
+
+      {/* Main Content */}
+      <main className='flex-1 bg-gray-100 p-6 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6'>
+        {dummyCards.map((card, index) => (
+          <Card
+            key={index}
+            className='shadow-lg border border-gray-200 flex flex-col justify-between h-[250px] w-full'
+          >
+            <CardHeader>
+              <CardTitle className='text-lg font-semibold'>
+                {card.title}
+              </CardTitle>
+              <CardDescription className='text-sm text-gray-500'>
+                {card.description}
+              </CardDescription>
+            </CardHeader>
+            <CardFooter>
+              <p className='text-gray-600 text-sm'>{card.footer}</p>
+            </CardFooter>
+          </Card>
+        ))}
+      </main>
+    </div>
   );
 }
