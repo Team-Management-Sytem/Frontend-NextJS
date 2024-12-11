@@ -5,10 +5,10 @@ import React, { useEffect, useState } from 'react';
 
 import { deleteTeam, fetchTeam, fetchTeams } from '@/lib/api';
 
-import EditTaskModal from '@/components/ui/EditTaskModal';
-import Sidebar from '@/components/ui/Sidebar';
-import TaskList from '@/components/ui/TaskList';
-import TeamDetails from '@/components/ui/TeamDetails';
+import EditTaskModal from '@/components/modals/EditTaskModal';
+import Sidebar from '@/components/sidebar/Sidebar';
+import TaskList from '@/components/cards/TaskList';
+import TeamDetails from '@/components/cards/TeamDetails';
 
 import { getUserData } from '@/app/services/userService';
 
@@ -205,11 +205,11 @@ const TeamPage = () => {
         {selectedTeam ? (
           <div>
             <TeamDetails team={selectedTeam} handleBack={handleBack} />
-            <TaskList 
-              tasks={assignedTasks} 
-              onEdit={handleEditTask} 
-              onCreateTask={handleCreateTask} 
-              selectedTeamId={selectedTeam.id} 
+            <TaskList
+              tasks={assignedTasks}
+              onEdit={handleEditTask}
+              onCreateTask={handleCreateTask}
+              selectedTeamId={selectedTeam.id}
             />
             <EditTaskModal
               isOpen={isModalOpen}

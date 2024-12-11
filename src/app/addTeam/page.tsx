@@ -12,7 +12,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/Card';
+} from '@/components/cards/card';
 
 export default function AddTeamPage() {
   const [name, setName] = useState('');

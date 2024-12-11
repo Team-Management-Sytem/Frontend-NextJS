@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation'; // Client-side routing hook
 import { useState } from 'react';
 
-import InputField from '@/components/ui/InputField';
+import InputField from '@/components/form/InputField';
 
 import { registerUser } from '@/app/services/userService';
 

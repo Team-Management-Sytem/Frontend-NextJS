@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import TaskCard from '@/components/ui/Card';
+import TaskCard from '@/components/cards/card';
 
 interface Task {
   id: number;

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-import InputField from '@/components/ui/InputField';
+import InputField from '@/components/form/InputField';
 
 import { loginUser } from '@/app/services/userService';
 
@@ -28,7 +28,6 @@ const Login = () => {
       setIsLoading(false);
     }
   };
-  
 
   return (
     <div className='flex h-screen'>

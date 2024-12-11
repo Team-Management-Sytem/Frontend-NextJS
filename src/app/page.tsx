@@ -5,8 +5,8 @@ import React, { useEffect, useState } from 'react';
 
 import { deleteTeam, fetchTeam, fetchTeams } from '@/lib/api';
 
-import AssignedTasks from '@/components/ui/AssignedTasks';
-import Sidebar from '@/components/ui/Sidebar';
+import AssignedTasks from '@/components/cards/AssignedTasks';
+import Sidebar from '@/components/sidebar/Sidebar';
 
 import { getAssignedTasks } from '@/app/services/taskService';
 import { getUserData } from '@/app/services/userService';
@@ -127,7 +127,9 @@ const HomePage = () => {
       />
 
       <main className='flex-1 bg-gray-100 p-6'>
-        <h3 className='text-xl text-blue-500 font-semibold mb-4'>Tasks Assigned to You</h3>
+        <h3 className='text-xl text-blue-500 font-semibold mb-4'>
+          Tasks Assigned to You
+        </h3>
         <AssignedTasks tasks={assignedTasks} />
       </main>
     </div>
