@@ -205,11 +205,11 @@ const TeamPage = () => {
         {selectedTeam ? (
           <div>
             <TeamDetails team={selectedTeam} handleBack={handleBack} />
-            <TaskList
-              tasks={assignedTasks}
-              onEdit={handleEditTask}
-              onCreateTask={handleCreateTask}
-              selectedTeamId={selectedTeam.id}
+            <TaskList 
+              tasks={assignedTasks} 
+              onEdit={handleEditTask} 
+              onCreateTask={handleCreateTask} 
+              selectedTeamId={selectedTeam.id} 
             />
             <EditTaskModal
               isOpen={isModalOpen}
