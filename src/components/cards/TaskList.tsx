@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Task } from '@/app/team/[id]/page';
 import CreateTaskModal from '@/components/modals/CreateTaskModal';
+import { Task } from '@/types';
 
 interface TaskListProps {
   tasks: Task[];

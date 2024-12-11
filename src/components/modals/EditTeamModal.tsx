@@ -1,12 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-
-interface Team {
-  id: number;
-  name: string;
-  description: string;
-}
+import { updateTeam } from '@/app/services/teamService';
+import { Team } from '@/types';
 
 interface EditTeamModalProps {
   team: Team;
@@ -15,30 +11,24 @@ interface EditTeamModalProps {
 }
 
 const EditTeamModal: React.FC<EditTeamModalProps> = ({ team, isOpen, onClose }) => {
-  const [updatedTeamData, setUpdatedTeamData] = useState({ 
-    name: team.name, 
-    description: team.description 
+  const [updatedTeamData, setUpdatedTeamData] = useState({
+    id: team.id,
+    name: team.name,
+    description: team.description,
+    users: team.users,
   });
 
   const handleUpdateTeam = async () => {
     try {
-      const response = await fetch(`http://127.0.0.1:8888/api/teams/${team.id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updatedTeamData),
-      });
-
-      if (!response.ok) {
-        alert('Failed to update team');
-        return;
-      }
-
+      await updateTeam(team.id, updatedTeamData);
       onClose();
-      window.location.reload();
+      window.location.reload(); 
     } catch (error) {
-      alert('Error updating team');
+      if (error instanceof Error) {
+        alert('Error updating team: ' + error.message);
+      } else {
+        alert('Error updating team');
+      }
     }
   };
 
@@ -54,7 +44,9 @@ const EditTeamModal: React.FC<EditTeamModalProps> = ({ team, isOpen, onClose }) 
             <input
               type="text"
               value={updatedTeamData.name}
-              onChange={(e) => setUpdatedTeamData({ ...updatedTeamData, name: e.target.value })}
+              onChange={(e) =>
+                setUpdatedTeamData({ ...updatedTeamData, name: e.target.value })
+              }
               className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
             />
           </div>
@@ -62,7 +54,9 @@ const EditTeamModal: React.FC<EditTeamModalProps> = ({ team, isOpen, onClose }) 
             <label className="block text-sm font-medium text-gray-700">Description:</label>
             <textarea
               value={updatedTeamData.description}
-              onChange={(e) => setUpdatedTeamData({ ...updatedTeamData, description: e.target.value })}
+              onChange={(e) =>
+                setUpdatedTeamData({ ...updatedTeamData, description: e.target.value })
+              }
               className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
             />
           </div>

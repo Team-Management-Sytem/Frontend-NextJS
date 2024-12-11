@@ -14,13 +14,13 @@ interface Task {
 }
 
 interface AssignedTasksProps {
-  tasks: Task[];
+  tasks: Task[] | null;
 }
 
-const AssignedTasks: React.FC<AssignedTasksProps> = ({ tasks }) => {
+const AssignedTasks: React.FC<AssignedTasksProps> = ({ tasks = [] }) => { 
   return (
     <div className='grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6'>
-      {tasks.length > 0 ? (
+      {tasks && tasks.length > 0 ? (
         tasks.map((task) => <TaskCard key={task.id} task={task} />)
       ) : (
         <p>No tasks assigned</p>
