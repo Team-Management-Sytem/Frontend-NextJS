@@ -74,3 +74,4 @@ export async function postTeam(data: { name: string; description: string }) {
 
   return response.json();
 }
+

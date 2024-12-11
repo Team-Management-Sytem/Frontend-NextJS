@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-import InputField from '@/components/ui/InputField';
+import InputField from '@/components/form/InputField';
 
 import { loginUser } from '@/app/services/userService';
 
@@ -19,7 +19,8 @@ const Login = () => {
   const handleLogin = async () => {
     setIsLoading(true);
     try {
-      await loginUser(email, password);
+      const response = await loginUser(email, password);
+      localStorage.setItem('token', response.data.token);
       router.push('/');
     } catch (err) {
       setError('Invalid credentials');

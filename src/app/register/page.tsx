@@ -2,10 +2,10 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation'; // Client-side routing hook
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-import InputField from '@/components/ui/InputField';
+import InputField from '@/components/form/InputField';
 
 import { registerUser } from '@/app/services/userService';
 
