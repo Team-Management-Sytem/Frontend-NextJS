@@ -77,8 +77,8 @@ export default function HomePage() {
 
       setTeams((prevTeams) =>
         prevTeams.map((team) =>
-          team.id === putTeam.id ? { ...team, ...updatedTeam.data } : team
-        )
+          team.id === putTeam.id ? { ...team, ...updatedTeam.data } : team,
+        ),
       );
       setSelectedTeam(updatedTeam.data);
       setUpdateTeam(null);
@@ -117,7 +117,7 @@ export default function HomePage() {
         <div className='flex items-center mb-10'>
           <Link
             href='/profileSettings'
-            className='flex items-center mb-10 cursor-pointer'
+            className='flex items-center mb-2 mt-2 cursor-pointer'
           >
             <div className='w-12 h-12 bg-gray-300 rounded-full'></div>
             <span className='ml-4 text-xl font-semibold'>Username</span>
@@ -145,11 +145,13 @@ export default function HomePage() {
             <div className='flex items-center justify-between'>
               <h1 className='text-2xl font-semibold'>{selectedTeam.name}</h1>
               <svg
-                width='15'
-                height='15'
+                width='20'
+                height='20'
                 viewBox='0 0 15 15'
                 fill='none'
                 xmlns='http://www.w3.org/2000/svg'
+                onClick={() => setUpdateTeam(selectedTeam)}
+                style={{ cursor: 'pointer' }}
               >
                 <path
                   d='M10.1275 2.85963L10.1837 2.89213C10.6701 3.17289 11.0756 3.407 11.3726 3.63616C11.686 3.87803 11.9347 4.15565 12.0389 4.54451C12.1431 4.93338 12.0665 5.29819 11.916 5.66437C11.8115 5.91854 11.6579 6.20415 11.4729 6.52995L11.0758 6.29394L11.0707 6.29094L6.74235 3.79199L6.33757 3.55342C6.52513 3.23399 6.69412 2.96116 6.86049 2.74556C7.10236 2.43214 7.37998 2.18337 7.76885 2.07917C8.15771 1.97498 8.52252 2.05161 8.8887 2.20211C9.23562 2.34469 9.64115 2.57884 10.1275 2.85963Z'
@@ -208,7 +210,7 @@ export default function HomePage() {
                     value={putTeam.name}
                     onChange={(e) =>
                       setUpdateTeam((prev) =>
-                        prev ? { ...prev, name: e.target.value } : null
+                        prev ? { ...prev, name: e.target.value } : null,
                       )
                     }
                   />
@@ -222,7 +224,7 @@ export default function HomePage() {
                     value={putTeam.description}
                     onChange={(e) =>
                       setUpdateTeam((prev) =>
-                        prev ? { ...prev, description: e.target.value } : null
+                        prev ? { ...prev, description: e.target.value } : null,
                       )
                     }
                   />
