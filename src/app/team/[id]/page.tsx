@@ -12,10 +12,21 @@ import TeamDetails from '@/components/ui/TeamDetails';
 
 import { getUserData } from '@/app/services/userService';
 
-interface Team {
+export interface UserData {
+  id: string;
+  name: string;
+  email: string;
+  telp_number: string;
+  role: string;
+  image_url: string;
+  is_verified: boolean;
+}
+
+export interface Team {
   id: number;
   name: string;
   description: string;
+  users: UserData[];
 }
 
 export interface Task {
@@ -40,12 +51,10 @@ const TeamPage = () => {
     name: string;
     email: string;
   }
-
   const [userData, setUserData] = useState<UserData | null>(null);
   const [assignedTasks, setAssignedTasks] = useState<Task[]>([]);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const router = useRouter();
   const params = useParams();
   const id = params?.id as string | undefined;
@@ -139,38 +148,9 @@ const TeamPage = () => {
     );
   };
 
-  const handleAddTask = async (task: {
-    title: string;
-    description: string;
-    status: string;
-    due_date: string;
-    user_id: string;
-  }) => {
-    try {
-      const response = await fetch('http://127.0.0.1:8888/api/tasks', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          title: task.title,
-          description: task.description,
-          status: task.status,
-          due_date: task.due_date,
-          teams_id: selectedTeam?.id,
-          user_id: task.user_id,
-        }),
-      });
-
-      if (response.ok) {
-        const taskData = await response.json();
-        setAssignedTasks((prevTasks) => [...prevTasks, taskData.data]);
-      } else {
-        alert('Failed to create task');
-      }
-    } catch (error) {
-      alert('Error creating task');
-    }
+  const handleCreateTask = (newTask: Task) => {
+    // Update tasks state with the newly created task
+    setAssignedTasks((prevTasks) => [...prevTasks, newTask]);
   };
 
   const handleCloseModal = () => {
@@ -197,7 +177,6 @@ const TeamPage = () => {
         },
       );
       if (response.ok) {
-      
         setAssignedTasks((prevTasks) =>
           prevTasks.map((task) =>
             task.id === updatedTask.id ? updatedTask : task,
@@ -222,13 +201,16 @@ const TeamPage = () => {
         handleDeleteTeam={handleDeleteTeam}
       />
 
-      <main className='flex-1 bg-gray-100 p-6'>
+      <main className='flex-1 bg-gray-100 p-14'>
         {selectedTeam ? (
           <div>
             <TeamDetails team={selectedTeam} handleBack={handleBack} />
-            <TaskList tasks={assignedTasks} onEdit={handleEditTask} />
-
-            {/* Edit Task Modal */}
+            <TaskList 
+              tasks={assignedTasks} 
+              onEdit={handleEditTask} 
+              onCreateTask={handleCreateTask} 
+              selectedTeamId={selectedTeam.id} 
+            />
             <EditTaskModal
               isOpen={isModalOpen}
               task={editingTask}

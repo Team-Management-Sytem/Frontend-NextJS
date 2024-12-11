@@ -97,7 +97,7 @@ export {
 
 const TaskCard = ({ task }: { task: Task }) => {
   let statusColor = '';
-  
+
   switch (task.status.toLowerCase()) {
     case 'not started':
       statusColor = 'bg-red-500';
@@ -114,17 +114,22 @@ const TaskCard = ({ task }: { task: Task }) => {
   }
 
   return (
-    <div className="shadow-lg border border-gray-200 flex flex-col justify-between h-[250px] w-full bg-white rounded-lg">
-      <div className="p-4">
-        <h2 className="text-lg font-semibold">{task.title}</h2>
-        <p className="text-sm text-gray-500 mt-2">{task.description}</p>
-      </div>
-      <div className="p-4 border-t">
-        <div className="mt-2 text-sm text-gray-600">Due Date: {new Date(task.due_date).toLocaleString()}</div>
-        <div className="mt-1 text-sm text-gray-600">Team ID: {task.teams_id}</div>
-        <div className={`mt-2 text-white text-sm font-semibold py-1 px-2 rounded ${statusColor}`}>
+    <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 ease-in-out p-4 flex flex-col justify-between h-[150px] w-full">
+      <div className="flex justify-between items-start">
+        <div>
+          <h2 className="text-lg font-semibold text-gray-800">{task.title}</h2>
+        </div>
+        <div
+          className={`text-sm font-semibold text-white py-1 px-3 rounded-full ${statusColor} self-center`}
+        >
           {task.status}
         </div>
+      </div>
+      <p className="text-sm text-gray-600 mb-4">{task.description}</p>
+
+      <div className="mt-2">
+        <div className="text-sm text-gray-600">Due Date: {new Date(task.due_date).toLocaleString()}</div>
+        <div className="text-sm text-gray-600">Team ID: {task.teams_id}</div>
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+
 import { Task } from '@/app/team/[id]/page';
 
 interface EditTaskModalProps {
@@ -8,24 +9,24 @@ interface EditTaskModalProps {
   task: Task | null;
   onClose: () => void;
   onSave: (updatedTask: Task) => void;
-  onDelete: (taskId: number) => void; 
+  onDelete: (taskId: number) => void;
 }
 
 const EditTaskModal: React.FC<EditTaskModalProps> = ({ isOpen, task, onClose, onSave, onDelete }) => {
   const [editingTask, setEditingTask] = useState<Task | null>(task);
-  const [users, setUsers] = useState<{ id: string, name: string }[]>([]); 
-  const [selectedUserId, setSelectedUserId] = useState<string | null>(null); 
+  const [users, setUsers] = useState<{ id: string, name: string }[]>([]);
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
 
   useEffect(() => {
     if (task) {
       setEditingTask(task);
       
-      fetch('http://127.0.0.1:8888/api/user')
+      fetch(`http://127.0.0.1:8888/api/teams/${task.teams_id}/users`)
         .then((response) => response.json())
         .then((data) => {
-          setUsers(data.data); 
+          setUsers(data.users || []);
         })
-        .catch((error) => console.error('Error fetching users:', error));
+        .catch(() => alert('Failed to fetch users'));
     }
   }, [task]);
 
@@ -33,7 +34,6 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({ isOpen, task, onClose, on
 
   const handleSave = () => {
     if (editingTask) {
-      
       if (editingTask.user && editingTask.user.id) {
         fetch(`http://127.0.0.1:8888/api/tasks/${editingTask.id}/remove`, {
           method: 'POST',
@@ -45,7 +45,6 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({ isOpen, task, onClose, on
           }),
         })
           .then(() => {
-            
             if (selectedUserId) {
               fetch(`http://127.0.0.1:8888/api/tasks/${editingTask.id}/assign`, {
                 method: 'POST',
@@ -57,21 +56,19 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({ isOpen, task, onClose, on
                 }),
               })
                 .then(() => {
-                  
                   const formattedDueDate = new Date(editingTask.due_date).toISOString();
 
                   onSave({
                     ...editingTask,
                     due_date: formattedDueDate,
-                    user: users.find((user) => user.id === selectedUserId) || undefined, 
+                    user: users.find((user) => user.id === selectedUserId) || undefined,
                   });
                 })
-                .catch((error) => alert('Failed to assign user'));
+                .catch(() => alert('Failed to assign user'));
             }
           })
-          .catch((error) => alert('Failed to remove current assignee'));
+          .catch(() => alert('Failed to remove current assignee'));
       } else {
-        
         if (selectedUserId) {
           fetch(`http://127.0.0.1:8888/api/tasks/${editingTask.id}/assign`, {
             method: 'POST',
@@ -83,16 +80,15 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({ isOpen, task, onClose, on
             }),
           })
             .then(() => {
-              
               const formattedDueDate = new Date(editingTask.due_date).toISOString();
 
               onSave({
                 ...editingTask,
                 due_date: formattedDueDate,
-                user: users.find((user) => user.id === selectedUserId) || undefined, 
+                user: users.find((user) => user.id === selectedUserId) || undefined,
               });
             })
-            .catch((error) => alert('Failed to assign user'));
+            .catch(() => alert('Failed to assign user'));
         }
       }
     }
@@ -104,17 +100,23 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({ isOpen, task, onClose, on
         method: 'DELETE',
       })
         .then(() => {
-          onDelete(editingTask.id); 
-          onClose(); 
+          onDelete(editingTask.id);
+          onClose();
         })
-        .catch((error) => alert('Failed to delete task'));
+        .catch(() => alert('Failed to delete task'));
     }
   };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-      <div className="w-96 bg-white p-6 rounded-lg shadow-lg">
-        <h3 className="text-lg font-semibold">Edit Task</h3>
+      <div className="w-96 bg-white p-6 rounded-lg shadow-lg relative">
+        <button
+          className="absolute top-4 right-4 text-red-500 text-sm underline"
+          onClick={handleDelete}
+        >
+          Delete Task
+        </button>
+        <h3 className="text-lg font-semibold mb-4">Edit Task</h3>
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700">Title:</label>
@@ -162,32 +164,30 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({ isOpen, task, onClose, on
               onChange={(e) => setSelectedUserId(e.target.value)}
             >
               <option value="">Select a user</option>
-              {users.map((user) => (
-                <option key={user.id} value={user.id}>
-                  {user.name}
-                </option>
-              ))}
+              {users.length === 0 ? (
+                <option value="">No members yet</option>
+              ) : (
+                users.map((user) => (
+                  <option key={user.id} value={user.id}>
+                    {user.name}
+                  </option>
+                ))
+              )}
             </select>
           </div>
         </div>
-        <div className="flex justify-end space-x-4">
+        <div className="flex justify-end space-x-4 mt-6">
           <button
             className="bg-red-500 text-white px-4 py-2 rounded-md"
-            onClick={onClose} 
+            onClick={onClose}
           >
             Cancel
           </button>
           <button
             className="bg-green-500 text-white px-4 py-2 rounded-md"
-            onClick={handleSave} 
+            onClick={handleSave}
           >
             Save Changes
-          </button>
-          <button
-            className="bg-red-700 text-white px-4 py-2 rounded-md"
-            onClick={handleDelete} 
-          >
-            Delete Task
           </button>
         </div>
       </div>

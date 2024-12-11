@@ -117,7 +117,7 @@ const HomePage = () => {
   };
 
   return (
-    <div className="flex h-screen">
+    <div className='flex h-screen'>
       <Sidebar
         teams={teams}
         loadingTeams={loadingTeams}
@@ -126,7 +126,8 @@ const HomePage = () => {
         handleDeleteTeam={handleDeleteTeam}
       />
 
-      <main className="flex-1 bg-gray-100 p-6">
+      <main className='flex-1 bg-gray-100 p-6'>
+        <h3 className='text-xl text-blue-500 font-semibold mb-4'>Tasks Assigned to You</h3>
         <AssignedTasks tasks={assignedTasks} />
       </main>
     </div>
