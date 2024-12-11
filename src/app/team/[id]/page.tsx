@@ -120,7 +120,6 @@ const TeamPage = () => {
   };
 
   const handleCreateTask = (newTask: Task) => {
-    // Update tasks state with the newly created task
     setAssignedTasks((prevTasks) => [...prevTasks, newTask]);
   };
 

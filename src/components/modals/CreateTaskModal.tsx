@@ -1,7 +1,7 @@
 'use client';
 
+import { Task } from '@/types';
 import React, { useState } from 'react';
-import { Task } from '@/app/team/[id]/page';
 
 interface CreateTaskModalProps {
   isOpen: boolean;
