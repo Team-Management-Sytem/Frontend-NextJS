@@ -1,4 +1,14 @@
+'use client';
 import * as React from 'react';
+
+interface Task {
+  id: number;
+  title: string;
+  description: string;
+  status: string;
+  due_date: string;
+  teams_id: number;
+}
 
 import { cn } from '@/lib/utils';
 
@@ -84,3 +94,40 @@ export {
   CardHeader,
   CardTitle,
 };
+
+const TaskCard = ({ task }: { task: Task }) => {
+  let statusColor = '';
+  
+  switch (task.status.toLowerCase()) {
+    case 'not started':
+      statusColor = 'bg-red-500';
+      break;
+    case 'done':
+      statusColor = 'bg-green-500';
+      break;
+    case 'in progress':
+      statusColor = 'bg-yellow-500';
+      break;
+    default:
+      statusColor = 'bg-gray-500';
+      break;
+  }
+
+  return (
+    <div className="shadow-lg border border-gray-200 flex flex-col justify-between h-[250px] w-full bg-white rounded-lg">
+      <div className="p-4">
+        <h2 className="text-lg font-semibold">{task.title}</h2>
+        <p className="text-sm text-gray-500 mt-2">{task.description}</p>
+      </div>
+      <div className="p-4 border-t">
+        <div className="mt-2 text-sm text-gray-600">Due Date: {new Date(task.due_date).toLocaleString()}</div>
+        <div className="mt-1 text-sm text-gray-600">Team ID: {task.teams_id}</div>
+        <div className={`mt-2 text-white text-sm font-semibold py-1 px-2 rounded ${statusColor}`}>
+          {task.status}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default TaskCard;

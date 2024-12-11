@@ -19,7 +19,8 @@ const Login = () => {
   const handleLogin = async () => {
     setIsLoading(true);
     try {
-      await loginUser(email, password);
+      const response = await loginUser(email, password);
+      localStorage.setItem('token', response.data.token);
       router.push('/');
     } catch (err) {
       setError('Invalid credentials');
@@ -27,6 +28,7 @@ const Login = () => {
       setIsLoading(false);
     }
   };
+  
 
   return (
     <div className='flex h-screen'>

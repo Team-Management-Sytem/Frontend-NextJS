@@ -42,3 +42,16 @@ export const registerUser = async (
     throw new Error('Registration failed');
   }
 };
+
+export const getUserData = async (token: string) => {
+  try {
+    const response = await axios.get('http://127.0.0.1:8888/api/user/me', {
+      headers: {
+        Authorization: `Bearer ${token}`, 
+      },
+    });
+    return response.data.data; 
+  } catch (error) {
+    throw new Error('Error fetching user data');
+  }
+};
